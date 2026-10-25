@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ถึง คุณ ญาณิศา</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600&family=Sarabun:wght@300;400&display=swap" rel="stylesheet">
+
+<!--
+  ================================================================
+   ✏️ จุดที่ต้องใส่ของตัวเอง (ค้นหาสัญลักษณ์ ✏️ ในไฟล์นี้)
+     รูปภาพ 4 ช่อง → photo1.jpg ... photo4.jpg (วางไว้โฟลเดอร์เดียวกับไฟล์นี้)
+     เพลง          → music.mp3 + ชื่อเพลง (ท้ายไฟล์)
+   ข้อความจดหมายอยู่ในส่วน <section class="entry"> แก้ได้ตามต้องการ
+  ================================================================
+-->
+
+<style>
+  :root {
+    --bg:     #faf7f4;
+    --ink:    #3f3535;
+    --soft:   #8c7d7b;
+    --accent: #a86472;
+    --line:   #e6dcd8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Sarabun", "Noto Sans Thai", sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .page { position: absolute; inset: 0; }
+  .hidden { display: none !important; }
+  .serif { font-family: "Noto Serif Thai", "Sarabun", serif; }
+
+  /* =====================================================
+     หน้า 1 : ซองจดหมาย
+     ===================================================== */
+  #page-envelope {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    background: radial-gradient(ellipse at 50% 40%, #fffdfb, #f3ece7 75%);
+  }
+  #page-envelope.leaving { animation: pageOut .7s forwards; }
+  @keyframes pageOut { to { opacity: 0; transform: scale(1.03); } }
+
+  .env-title {
+    font-family: "Noto Serif Thai", serif;
+    font-weight: 400;
+    font-size: clamp(1.25rem, 5vw, 1.55rem);
+    color: var(--ink);
+    text-align: center;
+    letter-spacing: .06em;
+  }
+  .env-title small {
+    display: block;
+    margin-top: 10px;
+    font-family: "Sarabun", sans-serif;
+    font-weight: 300;
+    font-size: .8rem;
+    letter-spacing: .32em;
+    color: var(--soft);
+  }
+
+  .envelope {
+    position: relative;
+    width: min(340px, 86vw);
+    aspect-ratio: 3 / 2;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    perspective: 900px;
+    -webkit-tap-highlight-color: transparent;
+    filter: drop-shadow(0 22px 24px rgba(90, 60, 55, .2));
+    animation: envFloat 4s ease-in-out infinite;
+  }
+  .envelope.opened { animation: none; cursor: default; }
+  @keyframes envFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+  .env-back  { position: absolute; inset: 0; z-index: 1; background: #d9c3bb; border-radius: 6px; }
+  .paper {
+    position: absolute;
+    left: 7%; right: 7%; top: 8%;
+    height: 86%;
+    z-index: 2;
+    background: #fffdf9;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: "Noto Serif Thai", serif;
+    color: var(--ink);
+    transition: transform .9s cubic-bezier(.3, 1.25, .5, 1) .55s;
+  }
+  .paper b    { font-size: 1.05rem; font-weight: 400; letter-spacing: .06em; }
+  .paper span { font-family: "Sarabun", sans-serif; font-weight: 300; font-size: .75rem; letter-spacing: .3em; color: var(--soft); }
+  .paper::before { content: ""; width: 34px; height: 1px; background: var(--accent); opacity: .6; }
+  .envelope.opened .paper { transform: translateY(-62%); }
+
+  .env-front {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: #ecdcd5;
+    border-radius: 6px;
+    clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%);
+  }
+  .env-front::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #f5ebe6;
+    clip-path: polygon(0 100%, 50% 46%, 100% 100%);
+  }
+  .flap {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    height: 56%;
+    z-index: 4;
+    background: #e2cdc4;
+    border-radius: 6px 6px 0 0;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    transition: transform .6s ease, background .3s .3s, z-index 0s .3s;
+  }
+  .envelope.opened .flap { transform: rotateX(180deg); z-index: 1; background: #cfb7ad; }
+
+  .seal {
+    position: absolute;
+    left: 50%; top: 56%;
+    z-index: 5;
+    width: 40px; height: 40px;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #b9707e, #8a3e4d);
+    box-shadow: 0 3px 8px rgba(80, 20, 35, .35), inset 0 -2px 0 rgba(0,0,0,.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f7e6e4;
+    font-size: 1rem;
+    animation: beat 2.4s ease-in-out infinite;
+    transition: opacity .3s, scale .3s;
+  }
+  .envelope.opened .seal { opacity: 0; scale: .3; animation: none; }
+  @keyframes beat { 0%,100% { transform: scale(1); } 12% { transform: scale(1.12); } 24% { transform: scale(1); } }
+
+  .env-hint {
+    font-family: "Sarabun", sans-serif;
+    font-weight: 300;
+    font-size: .85rem;
+    letter-spacing: .3em;
+    padding-left: .3em;
+    color: var(--soft);
+    animation: fade 2.4s ease-in-out infinite;
+  }
+  @keyframes fade { 0%,100% { opacity: .45; } 50% { opacity: 1; } }
+
+  /* =====================================================
+     หน้า 2 : ความในใจ
+     ===================================================== */
+  #page-letter {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    background: linear-gradient(180deg, #fffdfb, var(--bg) 40%);
+    animation: fadeIn 1.2s;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .content {
+    width: min(620px, 100%);
+    margin: 0 auto;
+    padding: 70px 26px 170px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 64px;
+  }
+
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity 1.1s ease, transform 1.1s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* --- หัวจดหมาย --- */
+  .hero { text-align: center; }
+  .hero .eyebrow {
+    font-weight: 300;
+    font-size: .8rem;
+    letter-spacing: .4em;
+    padding-left: .4em;
+    color: var(--soft);
+  }
+  .hero h1 {
+    margin-top: 14px;
+    font-family: "Noto Serif Thai", serif;
+    font-weight: 400;
+    font-size: clamp(1.9rem, 8vw, 2.5rem);
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .hero .rule { width: 44px; height: 1px; margin: 24px auto 0; background: var(--accent); opacity: .7; }
+
+  /* --- กรอบรูป (ใช้ซ้ำ) --- */
+  figure { margin: 0; text-align: center; }
+  .box {
+    position: relative;
+    margin: 0 auto;
+    padding: 10px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(60, 40, 40, .06), 0 16px 34px rgba(60, 40, 40, .1);
+  }
+  .slot { position: relative; width: 100%; overflow: hidden; background: #f1ebe7; border-radius: 2px; }
+  .slot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .slot .ph {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    font-weight: 300;
+    font-size: .78rem;
+    letter-spacing: .12em;
+    color: #b6a7a2;
+    text-align: center;
+  }
+  .slot .ph::before { content: ""; width: 26px; height: 1px; background: #d3c5c0; }
+  figcaption {
+    margin-top: 16px;
+    font-family: "Noto Serif Thai", serif;
+    font-weight: 300;
+    font-size: .85rem;
+    letter-spacing: .06em;
+    color: var(--soft);
+  }
+
+  figure.wide { width: 100%; }
+  .wide .box { width: min(540px, 100%); }
+  .wide .slot { aspect-ratio: 4 / 3; }
+
+  .pair { display: flex; justify-content: center; align-items: flex-end; gap: 18px; width: 100%; }
+  .pair figure { flex: 1 1 0; max-width: 250px; }
+  .arch .box  { border-radius: 999px 999px 4px 4px; padding: 9px; }
+  .arch .slot { aspect-ratio: 3 / 4.2; border-radius: 999px 999px 2px 2px; }
+  .tall .slot { aspect-ratio: 4 / 5; }
+
+  /* --- ข้อความจดหมาย --- */
+  .entry { width: 100%; display: flex; flex-direction: column; gap: 26px; }
+  .date {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 4px;
+    font-weight: 400;
+    font-size: .82rem;
+    letter-spacing: .22em;
+    color: var(--accent);
+  }
+  .date::before, .date::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .entry p {
+    font-family: "Noto Serif Thai", "Sarabun", serif;
+    font-weight: 300;
+    font-size: 1.02rem;
+    line-height: 2.15;
+    color: var(--ink);
+    text-align: left;
+  }
+
+  /* --- ประโยคปิดท้าย --- */
+  .closing { width: 100%; text-align: center; padding-top: 10px; }
+  .closing .ornament { width: 44px; height: 1px; margin: 0 auto 34px; background: var(--accent); opacity: .7; }
+  .closing p {
+    font-family: "Noto Serif Thai", serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    line-height: 2.2;
+    color: var(--ink);
+  }
+  .closing strong {
+    display: block;
+    margin-top: 26px;
+    font-weight: 500;
+    font-size: clamp(1.35rem, 5.5vw, 1.7rem);
+    line-height: 1.7;
+    color: var(--accent);
+  }
+
+  /* --- แถบเพลง --- */
+  .music {
+    position: fixed;
+    left: 50%; bottom: 18px;
+    z-index: 40;
+    translate: -50% 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: calc(100vw - 28px);
+    padding: 7px 20px 7px 7px;
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(8px);
+    border-radius: 999px;
+    box-shadow: 0 6px 20px rgba(60, 40, 40, .14), 0 0 0 1px var(--line);
+  }
+  .music button {
+    flex: none;
+    width: 34px; height: 34px;
+    border: none;
+    border-radius: 50%;
+    font-size: .7rem;
+    color: #fff;
+    background: var(--accent);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .music .name {
+    font-family: "Sarabun", sans-serif;
+    font-weight: 300;
+    font-size: .82rem;
+    letter-spacing: .08em;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .eq { display: flex; align-items: flex-end; gap: 3px; height: 14px; }
+  .eq i { width: 2px; height: 4px; background: var(--accent); animation: eq 1s ease-in-out infinite; animation-play-state: paused; }
+  .eq i:nth-child(2) { animation-delay: .25s; }
+  .eq i:nth-child(3) { animation-delay: .5s; }
+  .music.playing .eq i { animation-play-state: running; }
+  @keyframes eq { 0%,100% { height: 4px; } 50% { height: 14px; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .envelope, .seal, .env-hint { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ====================================================
+       หน้า 1 : ซองจดหมาย
+       ==================================================== -->
+  <div class="page" id="page-envelope">
+    <!-- ✏️ ข้อความหน้าแรก -->
+    <div class="env-title">มีจดหมายถึงคุณ<small>LETTER</small></div>
+
+    <button class="envelope" id="envelope" type="button" aria-label="แตะเพื่อเปิดซองจดหมาย">
+      <div class="env-back"></div>
+      <div class="paper">
+        <b>ถึง คุณ ญาณิศา</b>
+        <span>22.09.2568</span>
+      </div>
+      <div class="env-front"></div>
+      <div class="flap"></div>
+      <div class="seal">♥</div>
+    </button>
+
+    <div class="env-hint" id="env-hint">แตะเพื่อเปิด</div>
+  </div>
+
+  <!-- ====================================================
+       หน้า 2 : ความในใจ
+       ==================================================== -->
+  <div class="page hidden" id="page-letter">
+    <div class="content">
+
+      <header class="hero reveal">
+        <div class="eyebrow">จดหมายถึง</div>
+        <h1>คุณ ญาณิศา</h1>
+        <div class="rule"></div>
+      </header>
+
+      <!-- รูปที่ 1 -->
+      <figure class="wide reveal">
+        <div class="box">
+          <div class="slot">
+            <div class="ph">ใส่รูปที่ 1<br>photo1.jpg</div>
+            <!-- ✏️ รูปที่ 1 : วางไฟล์ photo1.jpg ไว้โฟลเดอร์เดียวกัน หรือแก้ชื่อไฟล์ตรง src -->
+            <img src="photo1.jpg" alt="" onerror="this.style.display='none'">
+          </div>
+        </div>
+        <!-- ✏️ ข้อความใต้รูป (ลบทิ้งได้) -->
+        <figcaption>คืนที่เราได้พบกัน</figcaption>
+      </figure>
+
+      <!-- ===== 22 กันยายน 2568 ===== -->
+      <section class="entry">
+        <div class="date reveal">22 กันยายน 2568</div>
+        <p class="reveal">คืนนั้นผมได้พบกับเธอที่งานประกวด Ambassador โดยบังเอิญ และความบังเอิญนั้น มาพร้อมกับความรู้สึกภายในใจ ที่กำลังบ่งบอกอะไรสักอย่างเกี่ยวกับผู้หญิงคนนี้ โดยที่ ณ เวลานั้น แม้แต่ตัวผมเองก็ไม่สามารถเข้าใจมันได้</p>
+        <p class="reveal">จากวันนั้น เราคุยกันทุกวัน ถึงแม้ว่าตัวผมจะไม่ใช่คนพูดเก่ง และที่สำคัญเป็นคนที่แทบไม่เปิดใจกับการพบปะผู้คนใหม่ ๆ</p>
+        <p class="reveal">แต่ผู้หญิงคนนี้นั้นต่างออกไป เขาทำให้ผมสามารถเป็นตัวเองได้โดยไม่ต้องปรุงแต่งอะไรใด ๆ และยังสบายใจมาก ๆ เวลาผ่านไปวันแล้ววันเล่า ยิ่งเราคุยกันเท่าไร ผมก็ยิ่งรู้จักเธอมากขึ้นหลายเท่าจากวันแรก และใช่ครับ การที่ผมได้รู้จักผู้หญิงคนนี้นั้น ทำให้ชีวิตผมเปลี่ยนไปอย่างสิ้นเชิง เหมือนกับว่าโลกสีเทา ๆ ของผม มีสายรุ้งมาปรากฏตรงหน้าโดยบังเอิญ และการที่ผมรับรู้และรู้สึกได้แบบนั้น ช่วงเวลานั้นผมจึงปฏิเสธไม่ได้เลยว่า ผมหลงรักเธอจริง ๆ</p>
+        <p class="reveal">แต่ถึงจะบอกแบบนั้น บางครั้งตัวผมเองอาจจะหลงรักเธอตั้งแต่วันแรกที่เราพบหน้ากัน ถึงแม้ตอนนั้นเธอจะไม่รู้ตัวว่าผมชอบเธอ ด้วยความที่เธอกลัวว่าจะเสียใจซ้ำซ้อน กับเรื่องที่ผ่านมา แต่ผมในตอนนั้นก็ต้องการแค่ได้มอบสิ่งดี ๆ ให้กับผู้หญิงคนนี้ก็เท่านั้น</p>
+      </section>
+
+      <!-- รูปที่ 2-3 (กรอบโค้ง + กรอบตรง) -->
+      <div class="pair">
+        <figure class="arch reveal">
+          <div class="box">
+            <div class="slot">
+              <div class="ph">ใส่รูปที่ 2<br>photo2.jpg</div>
+              <!-- ✏️ รูปที่ 2 -->
+              <img src="photo2.jpg" alt="" onerror="this.style.display='none'">
+            </div>
+          </div>
+          <!-- ✏️ ข้อความใต้รูป (ลบทิ้งได้) -->
+          <figcaption>ทุกวันที่คุยกัน</figcaption>
+        </figure>
+        <figure class="tall reveal">
+          <div class="box">
+            <div class="slot">
+              <div class="ph">ใส่รูปที่ 3<br>photo3.jpg</div>
+              <!-- ✏️ รูปที่ 3 -->
+              <img src="photo3.jpg" alt="" onerror="this.style.display='none'">
+            </div>
+          </div>
+          <!-- ✏️ ข้อความใต้รูป (ลบทิ้งได้) -->
+          <figcaption>โลกที่มีสายรุ้ง</figcaption>
+        </figure>
+      </div>
+
+      <!-- ===== 6 ตุลาคม 2568 ===== -->
+      <section class="entry">
+        <div class="date reveal">6 ตุลาคม 2568</div>
+        <p class="reveal">วันนั้นเธอดันรู้ตัวซะแล้ว ว่าผมกำลังชอบเธออยู่ แต่ก็นะ ตัวผมเองก็พยายามจะให้เธอรับรู้นั่นแหละ วันนั้นผมมีความสุขมาก ๆ ที่เธอเลือกที่จะยังอยู่ ไม่ปฏิเสธในสิ่งที่ผมมอบให้ ไม่ปฏิเสธคำบอกชอบของผม และตั้งแต่วันนั้นมาผมก็มีความสุขมาก ๆ มาโดยตลอด ซึ่งแน่นอนว่าความสุขของผมก็มาจากการที่ได้เห็นเธอยิ้ม ได้เห็นเธอหัวเราะ ปราศจากน้ำตาบนใบหน้า และปราศจากฝนตกในหัวใจ</p>
+        <p class="reveal">จากวันนั้นผมไม่รู้ว่าหลังจากนี้จะเป็นยังไง แต่ผมรับรู้ผ่านหัวใจของผมได้แค่ว่า ผมต้องดูแลผู้หญิงคนนี้ให้ดีที่สุดเท่าที่ผมจะทำได้ รักษาหัวใจเขาให้สมกับที่เขาสมควรจะได้รับ</p>
+        <p class="reveal">จนถึงวันนี้ผมก็พูดได้เต็มปากว่าสิ่งที่ผมพบเจอนั้น ไม่ใช่ความบังเอิญแต่อย่างใด และการพบกันของเรา คงจะเป็นวาสนาของกันและกัน ไม่ใช่ความโชคดีของฝ่ายใดฝ่ายหนึ่ง และผมก็เชื่อแบบนั้นสุดใจ</p>
+      </section>
+
+      <!-- รูปที่ 4 -->
+      <figure class="wide reveal">
+        <div class="box">
+          <div class="slot">
+            <div class="ph">ใส่รูปที่ 4<br>photo4.jpg</div>
+            <!-- ✏️ รูปที่ 4 -->
+            <img src="photo4.jpg" alt="" onerror="this.style.display='none'">
+          </div>
+        </div>
+        <!-- ✏️ ข้อความใต้รูป (ลบทิ้งได้) -->
+        <figcaption>จนถึงวันนี้</figcaption>
+      </figure>
+
+      <!-- ประโยคปิดท้าย : จบตรงนี้ให้เขาหันมา -->
+      <div class="closing reveal">
+        <div class="ornament"></div>
+        <p>อ่านมาถึงตรงนี้ ผมเชื่อว่าคนที่กำลังอยู่ข้าง ๆ คุณ คงมีอะไรอยากจะบอกคุณ เป็นสิ่งที่เขาเก็บไว้ในใจมาโดยตลอด<strong>ลองหันไปมองหน้าเขาสิครับ</strong></p>
+      </div>
+
+    </div>
+
+    <!-- แถบเพลง -->
+    <div class="music" id="music">
+      <button id="music-btn" type="button" aria-label="เล่น/หยุดเพลง">▶</button>
+      <div class="eq"><i></i><i></i><i></i></div>
+      <!-- ✏️ ชื่อเพลง -->
+      <div class="name">ชื่อเพลงของเรา</div>
+    </div>
+  </div>
+
+  <!-- ✏️ เพลง : วางไฟล์ music.mp3 ไว้โฟลเดอร์เดียวกัน หรือแก้ชื่อไฟล์ตรง src -->
+  <audio id="bgm" src="music.mp3" loop preload="auto"></audio>
+
+<script>
+  const $ = id => document.getElementById(id);
+
+  const pageEnv    = $('page-envelope');
+  const pageLetter = $('page-letter');
+  const envelope   = $('envelope');
+  const hint       = $('env-hint');
+  const bgm        = $('bgm');
+  const music      = $('music');
+  const musicBtn   = $('music-btn');
+
+  /* ---------- เพลง ---------- */
+  bgm.addEventListener('play',  () => { music.classList.add('playing');    musicBtn.textContent = '❚❚'; });
+  bgm.addEventListener('pause', () => { music.classList.remove('playing'); musicBtn.textContent = '▶'; });
+  musicBtn.addEventListener('click', () => {
+    if (bgm.paused) bgm.play().catch(() => {});
+    else bgm.pause();
+  });
+
+  /* ---------- เปิดซอง ---------- */
+  let opened = false;
+  envelope.addEventListener('click', () => {
+    if (opened) return;
+    opened = true;
+    envelope.classList.add('opened');
+    hint.textContent = '...';
+    bgm.play().catch(() => {});          // เริ่มเพลงตอนกด (ถ้าไม่มีไฟล์เพลงก็ข้ามไป)
+
+    setTimeout(() => pageEnv.classList.add('leaving'), 2300);
+    setTimeout(() => {
+      pageEnv.classList.add('hidden');
+      pageLetter.classList.remove('hidden');
+      initReveal();
+    }, 3000);
+  });
+
+  /* ---------- ค่อยๆ โผล่ตอนเลื่อนลงมา ---------- */
+  function initReveal() {
+    const items = pageLetter.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { items.forEach(el => el.classList.add('in')); return; }
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { root: pageLetter, threshold: .15 });
+    items.forEach(el => io.observe(el));
+  }
+</script>
+</body>
+</html>
